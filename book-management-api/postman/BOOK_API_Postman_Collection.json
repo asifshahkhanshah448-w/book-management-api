@@ -146,8 +146,8 @@
               "pm.test(\"Response reflects updated title and author\", function () {",
               "    var jsonData = pm.response.json();",
               "    pm.expect(jsonData.success).to.be.true;",
-              "    pm.expect(jsonData.data.title).to.eql(\"The Alchemist - 25th Anniversary Edition\");",
-              "    pm.expect(jsonData.data.author).to.eql(\"Paulo Coelho\");",
+              "    pm.expect(jsonData.data.title).to.eql(\"Atomic Habits (Updated Edition)\");",
+              "    pm.expect(jsonData.data.author).to.eql(\"James Clear\");",
               "});"
             ],
             "type": "text/javascript"
@@ -168,7 +168,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"title\": \"The Alchemist - 25th Anniversary Edition\",\n  \"author\": \"Paulo Coelho\"\n}",
+          "raw": "{\n  \"title\": \"Atomic Habits (Updated Edition)\",\n  \"author\": \"James Clear\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -176,16 +176,16 @@
           }
         },
         "url": {
-          "raw": "{{baseUrl}}/books/1",
+          "raw": "{{baseUrl}}/books/{{createdBookId}}",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
             "books",
-            "1"
+            "{{createdBookId}}"
           ]
         },
-        "description": "Updates the title and author of an existing book by ID. Returns HTTP 200."
+        "description": "Updates the title and author of the dynamically created book. Returns HTTP 200."
       },
       "response": []
     },
@@ -219,13 +219,13 @@
           }
         ],
         "url": {
-          "raw": "{{baseUrl}}/books/1",
+          "raw": "{{baseUrl}}/books/{{createdBookId}}",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
             "books",
-            "1"
+            "{{createdBookId}}"
           ]
         },
         "description": "Deletes a book by ID. Returns HTTP 200 with a success message."

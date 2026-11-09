@@ -1,0 +1,28 @@
+{
+  "name": "book-management-api",
+  "version": "1.0.0",
+  "description": "Elevate Labs Web Development Internship - Task 3: REST API to Manage a List of Books Using Node.js and Express",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "echo \"Use Postman collection in postman/ directory to run automated tests\" && exit 0"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "rest-api",
+    "crud",
+    "in-memory",
+    "elevate-labs",
+    "internship"
+  ],
+  "author": "Asif Shah Khan",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

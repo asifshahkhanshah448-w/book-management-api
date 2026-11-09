@@ -1,0 +1,371 @@
+{
+  "info": {
+    "_postman_id": "a98dfb32-8e12-4299-9134-8c812c3f8901",
+    "name": "Elevate Labs - Book Management REST API",
+    "description": "Postman test suite for Elevate Labs Web Development Internship Task 3: REST API to Manage a List of Books using Node.js and Express.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "createdBookId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. GET All Books",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response has success boolean and data array\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('success', true);",
+              "    pm.expect(jsonData).to.have.property('data');",
+              "    pm.expect(Array.isArray(jsonData.data)).to.be.true;",
+              "});",
+              "",
+              "pm.test(\"Books have required fields: id, title, author\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    if (jsonData.data.length > 0) {",
+              "        var book = jsonData.data[0];",
+              "        pm.expect(book).to.have.property('id');",
+              "        pm.expect(book).to.have.property('title');",
+              "        pm.expect(book).to.have.property('author');",
+              "    }",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/books",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "books"
+          ]
+        },
+        "description": "Retrieves the complete list of available books from the in-memory array."
+      },
+      "response": []
+    },
+    {
+      "name": "2. POST Add New Book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201 Created\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response returns newly created book with generated ID\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData).to.have.property('data');",
+              "    pm.expect(jsonData.data.title).to.eql(\"Atomic Habits\");",
+              "    pm.expect(jsonData.data.author).to.eql(\"James Clear\");",
+              "    pm.expect(jsonData.data.id).to.be.a('number');",
+              "    ",
+              "    // Store created ID for subsequent PUT and DELETE tests",
+              "    pm.collectionVariables.set(\"createdBookId\", jsonData.data.id);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Atomic Habits\",\n  \"author\": \"James Clear\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/books",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "books"
+          ]
+        },
+        "description": "Adds a new book using req.body. Generates a unique ID and returns HTTP 201."
+      },
+      "response": []
+    },
+    {
+      "name": "3. PUT Update Book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response reflects updated title and author\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.data.title).to.eql(\"The Alchemist - 25th Anniversary Edition\");",
+              "    pm.expect(jsonData.data.author).to.eql(\"Paulo Coelho\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"The Alchemist - 25th Anniversary Edition\",\n  \"author\": \"Paulo Coelho\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/books/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "books",
+            "1"
+          ]
+        },
+        "description": "Updates the title and author of an existing book by ID. Returns HTTP 200."
+      },
+      "response": []
+    },
+    {
+      "name": "4. DELETE Book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Returns success true with confirmation message\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.message).to.include(\"deleted successfully\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/books/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "books",
+            "1"
+          ]
+        },
+        "description": "Deletes a book by ID. Returns HTTP 200 with a success message."
+      },
+      "response": []
+    },
+    {
+      "name": "5. Edge Case: POST Missing Author (Expect 400 Bad Request)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400 Bad Request\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"Returns validation error message\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.false;",
+              "    pm.expect(jsonData.error).to.include(\"author\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Book Without Author\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/books",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "books"
+          ]
+        },
+        "description": "Validates that POST /books rejects payloads missing required fields."
+      },
+      "response": []
+    },
+    {
+      "name": "6. Edge Case: PUT Non-Existent Book (Expect 404 Not Found)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 404 Not Found\", function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "pm.test(\"Returns 404 error explanation\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.false;",
+              "    pm.expect(jsonData.error).to.include(\"No book exists\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Non Existent\",\n  \"author\": \"Unknown\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/books/99999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "books",
+            "99999"
+          ]
+        },
+        "description": "Verifies that updating a non-existent book returns HTTP 404."
+      },
+      "response": []
+    },
+    {
+      "name": "7. Edge Case: DELETE Non-Existent Book (Expect 404 Not Found)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 404 Not Found\", function () {",
+              "    pm.response.to.have.status(404);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/books/99999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "books",
+            "99999"
+          ]
+        },
+        "description": "Verifies that deleting a non-existent book returns HTTP 404."
+      },
+      "response": []
+    }
+  ]
+}
